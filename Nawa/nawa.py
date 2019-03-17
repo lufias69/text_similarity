@@ -107,117 +107,24 @@ def dice_similarity(x, y):
 def ubah_simbol(teks):
     return teks.replace(".", "").replace("}", "").replace("{", "").replace("(", "").replace(")", "").replace("-", "").replace(":", " ")
 
-
-
-
-def pisahKata_old(dicari, jawaban):
-    dicari_split = dicari.split()
-    jawaban_split = jawaban.split()
-    for h in dicari_split:
-        for ct, i in enumerate(jawaban_split) :
-            p_dicari = len(h)
-            index_depan = 0
-            if re.search(h, i):
-                index_depan = re.search(h, i).start()
-                index_akhir = re.search(h, i).end()
-            if len(i) >= p_dicari:
-                if re.search(h, i):
-                    i = [x for x in i]
-                    i.insert(index_akhir, " ")
-                    if index_depan != 0:
-                        i.insert(index_depan, " ")
-                    i = "".join(i)
-                    jawaban_split[ct] = i
-    return " ".join(jawaban_split)
-
-def pisahKata_old(kunci_jawaban, jawaban):
-    kunci_jawaban_split = kunci_jawaban.split()
-    jawaban_split = jawaban.split()
-    kate = []
-    for i in kunci_jawaban_split:
-        for j in jawaban_split:
-            if i != j:
-                if re.search(i, j):
-                    kate.append(i)
-
-    #jawaban_split = " ".join(list(set(jawaban_split+kate)))
-    return " ".join(list(set(jawaban_split+kate)))
-
-def pisahKata__old(dicari, jawaban):
-    dicari_split = dicari.split()
-    jawaban_split = jawaban.split()
-    for h in dicari_split:
-        for ct, i in enumerate(jawaban_split) :
-            p_dicari = len(h)
-            if len(i) >= p_dicari:
-                a = []
-                for j in range(p_dicari):
-                    a.append(i[j])
-                a_j = "".join(a)
-                if a_j == h:
-                    #print(i)
-                    i = [x for x in i]
-                    i.insert(p_dicari, " ")
-                    i = "".join(i)
-                    jawaban_split[ct] = i
-    return " ".join(jawaban_split)
-
 def pisahKata(kunci_jawaban, jawaban):
-    kunci_jawaban_split = kunci_jawaban.split()
-    jawaban_split       = jawaban.split()
-    n_jawaban = []
-    for kj in kunci_jawaban_split:
-        for key, j in enumerate(jawaban_split):
-            if re.search(kj, j):
-                start = re.search(kj, j).start()
-                end   = re.search(kj, j).end()
-                if start != 0 and end != len(j):
-                    #print(kj)
-                    j_ = [x for x in j]
-                    if j_[start-1] != " ":
-                        
-                        j_[start] = " "+j_[start]
-                    if j_[end] != " ":
-                        j_[end] = " "+j_[end-1]
-                        #print(j_)
-                        #print(end)
-                        j = "".join(j_)
-                        jawaban_split[key]=j
-                        #print(j)
-                
-                elif start != 0 and end == len(j):
-                    #print(kj)
-                    j_ = [x for x in j]
-                    if j_[start-1] != " ":
-                        
-                        j_[start] = " "+j_[start]
-                    
-                    #j_[end] = " "+j_[end-1]
-                    #print(j_)
-                    #print(end)
-                    j = "".join(j_)
-                    jawaban_split[key]=j
-                    #print(j)
-                    #pass
-                elif start == 0 and end != len(j):
-                    #print(kj)
-                    j_ = [x for x in j]
-                    #if j_[start-1] != " ":
-                        #print("ini")
-                        #j_[start] = " "+j_[start]
-                    if j_[end] != " ":
-                        j_[end] = " "+ j_[end]
-                        #print(j_)
-                        #print(end)
-                        j = "".join(j_)
-                        jawaban_split[key]=j
-                        #print(j)
-                    
-                else:
-                    #print("ini else", j)
-                    pass
-            #n_jawaban.append(j)
-    return " ".join(jawaban_split)
+    d_index = []
+    b_index = []
+    
+    for i in S_kunci_jawaban:
+        index_replace = [(m.start(0)) for m in re.finditer(i,jawaban)]
+        d_index += index_replace
+    
+        index_replace = [(m.end(0)) for m in re.finditer(i,jawaban)]
+        b_index += index_replace
+    jawaban_list = [x for x in jawaban]
+    for d, b in zip(d_index, b_index):
+        #print(d,b)
+        jawaban_list[d]= " "+jawaban_list[d]
+        jawaban_list[b-1]=jawaban_list[b-1]+" "
+
+    jawaban_list = re.sub(r"\s+", " ","".join(jawaban_list).rstrip().strip().lstrip())
+    return jawaban_list
 
 def cek_negasi(kata_negasi, kata_dicari):
     if type(kata_negasi) != list:
