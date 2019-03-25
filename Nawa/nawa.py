@@ -111,7 +111,7 @@ def pisahKata(kunci_jawaban, jawaban):
     d_index = []
     b_index = []
     
-    for i in kunci_jawaban:
+    for i in kunci_jawaban.split():
         index_replace = [(m.start(0)) for m in re.finditer(i,jawaban)]
         d_index += index_replace
     
